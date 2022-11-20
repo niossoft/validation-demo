@@ -5,7 +5,7 @@ import com.innova.ds.dto.BaseInput;
 import com.innova.ds.validation.PasswordValidationStrategy;
 import com.innova.ds.validation.ValidationStrategy;
 import com.innova.ds.validation.context.ValidationContext;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -14,9 +14,6 @@ import java.util.Set;
 
 public class ValidationTest {
 
-    /**
-     * https://github.com/RathaKM/JavaAdhocExamples/blob/develop/src/test/java/com/validator/enumuse/ValidatorTest.java
-     * */
     static BaseInput input;
     static ValidationContext vc;
     static Set<ValidationStrategy> strategies = new LinkedHashSet<>();
@@ -36,7 +33,7 @@ public class ValidationTest {
         input = new BaseInput("A1a1Bsgf");
         Object[] arrResultActual = vc.execute(input).keySet().toArray();
         Object[] arrResultExpected = {ValidationType.LOWERCASE_NUMERIC_ONLY.name()};
-        Assert.assertArrayEquals(arrResultExpected, arrResultActual);
+        Assertions.assertArrayEquals(arrResultExpected, arrResultActual);
     }
 
     @Test
@@ -44,7 +41,7 @@ public class ValidationTest {
         input = new BaseInput("1a1");
         Object[] arrResultActual = vc.execute(input).keySet().toArray();
         Object[] arrResultExpected = {ValidationType.LENGTH_RANGE.name()};
-        Assert.assertArrayEquals(arrResultExpected, arrResultActual);
+        Assertions.assertArrayEquals(arrResultExpected, arrResultActual);
     }
 
     @Test
@@ -52,7 +49,7 @@ public class ValidationTest {
         input = new BaseInput("123456");
         Object[] arrResultActual = vc.execute(input).keySet().toArray();
         Object[] arrResultExpected = {ValidationType.MIN_LOWERCASE.name()};
-        Assert.assertArrayEquals(arrResultExpected, arrResultActual);
+        Assertions.assertArrayEquals(arrResultExpected, arrResultActual);
     }
 
     @Test
@@ -60,7 +57,7 @@ public class ValidationTest {
         input = new BaseInput("qfdsgbs");
         Object[] arrResultActual = vc.execute(input).keySet().toArray();
         Object[] arrResultExpected = {ValidationType.MIN_NUMERIC.name()};
-        Assert.assertArrayEquals(arrResultExpected, arrResultActual);
+        Assertions.assertArrayEquals(arrResultExpected, arrResultActual);
     }
 
     @Test
@@ -68,6 +65,6 @@ public class ValidationTest {
         input = new BaseInput("aa8754436");
         Object[] arrResultActual = vc.execute(input).keySet().toArray();
         Object[] arrResultExpected = {ValidationType.NO_SEQUENCE.name()};
-        Assert.assertArrayEquals(arrResultExpected, arrResultActual);
+        Assertions.assertArrayEquals(arrResultExpected, arrResultActual);
     }
 }
