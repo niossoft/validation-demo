@@ -13,8 +13,8 @@ public enum PasswordValidationStrategy implements ValidationStrategy {
     NO_SEQUENCE (ValidationType.NO_SEQUENCE, ErrorMsgType.NO_SEQUENCE) {
         @Override
         public <T extends BaseInput> Optional<Boolean> validate(T input) {
-            String inputString = input.getPassword();
-            int matches = StringUtils.executeRegex("(.+)\\1", inputString);
+            String password = input.getPassword();
+            int matches = StringUtils.executeRegex("(.+)\\1", password);
             return Optional.of(matches == 0);
         }
     },
