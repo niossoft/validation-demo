@@ -8,7 +8,7 @@ defined. Then I try to use Enum for the implementation on this.
 
 The structure is presented in the picture below.
 
-![image](src\main\resources\images\Validation_Structure.png)
+![image](./src/main/resources/images/Validation_Structure.png)
 
 The PasswordValidationStrategy implements interface Validation Strategy, and each node of PasswordValidationStrategy will overide with 3 methods to do the customized job in the validation process. 
 
