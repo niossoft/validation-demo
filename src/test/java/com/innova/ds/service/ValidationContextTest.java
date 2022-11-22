@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ValidationTest {
+public class ValidationContextTest {
 
     static BaseInput input;
     static ValidationContext vc;

@@ -58,7 +58,8 @@ POST http://localhost:8080/api/verify/password
 }
 ```
 
-Hit the API via postman with **Url** above, we could get the error fields below.
+Hit the API via postman with **Url** above, we could get the error fields below. 
+If Results are empty, **_means it passed all the validation!_** 
 
 #### Results:
 ```
