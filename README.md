@@ -59,9 +59,16 @@ POST http://localhost:8080/api/verify/password
 ```
 
 Hit the API via postman with **Url** above, we could get the error fields below. 
-If Results are empty, **_means it passed all the validation!_** 
+If Results are empty, **_means it passed all the validation!_**
 
-#### Results:
+#### Successful Results:
+```
+{
+
+}
+```
+
+#### Failure Results:
 ```
 {
     "LOWERCASE_NUMERIC_ONLY": "alphabetical lowercase & numeric character only.",
