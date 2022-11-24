@@ -1,4 +1,4 @@
-package com.innova.ds;
+package com.innova.ds.service.strategy;
 
 import com.innova.ds.constant.RuleType;
 import com.innova.ds.dto.BaseInput;
@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.*;
 
-public class ValidationServiceStrategyTest {
+public class ValidationServiceStrategyUnitTest {
 
     static SequenceRule sequenceRule = new SequenceRule();
     static LengthRule lengthRule = new LengthRule();

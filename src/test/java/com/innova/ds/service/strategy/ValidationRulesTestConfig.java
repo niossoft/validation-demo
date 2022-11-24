@@ -1,4 +1,4 @@
-package com.innova.ds;
+package com.innova.ds.service.strategy;
 
 import com.innova.ds.constant.RuleType;
 import com.innova.ds.dto.BaseInput;

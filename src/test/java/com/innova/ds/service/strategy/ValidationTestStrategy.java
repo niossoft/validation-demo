@@ -1,4 +1,4 @@
-package com.innova.ds;
+package com.innova.ds.service.strategy;
 
 import java.util.Map;
 
