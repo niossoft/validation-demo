@@ -3,47 +3,45 @@
 ### Intro
 
 As per the requirement, the validation for each rule will be different and we may need to extend the validations for
-more rules in the future. Hence, the best approach will be to use the Strategy pattern.
-
-I try to avoid with the usual **Class way** of implementation. Because if we do it that way, we need more classes to be
-defined. Then I try to use Enum for the implementation on this.
+more rules in the future. Hence, the best approach will be to use the Strategy pattern. 
+I try to create with the usual **Class way** of implementation.
 
 The structure is presented in the picture below.
 
-![image](./src/main/resources/images/Validation_Structure.png)
+![image](./src/main/resources/images/ValidationStructure.png)
 
-The PasswordValidationStrategy implements interface ValidationStrategy, 
-and each node of PasswordValidationStrategy will override with 3 methods to do the customized job in the validation process. 
+The several Rules object implements interface ValidationStrategy, 
+and each rule will override with 3 methods to do the customized job in the validation process. 
 
 ### Extensible & Maintainable
 
-The class ValidationContext like a container object to include all of ValidationStrategies.
+The class ValidationService like a container to inject all of ValidationStrategies with @Autowired.
 so that we could handle validation types whatever we want. To accomplish customized validation on any single fields/details.
 
 
 #### src\main\java\com\innova\ds\service\ValidationService.java
 ```
+    
+    @Autowired
+    private List<ValidationStrategy> passwordRules;
+    .
+    ..
+    ...
     public Map<String, String> verifyPasswordStrategy(BaseInput baseInput) {
-        Set<ValidationStrategy> strategies = new LinkedHashSet<>();
-        strategies.add(PasswordValidationStrategy.LOWERCASE_NUMERIC_ONLY);
-        strategies.add(PasswordValidationStrategy.LENGTH_RANGE);
-        strategies.add(PasswordValidationStrategy.MIN_LOWERCASE);
-        strategies.add(PasswordValidationStrategy.MIN_NUMERIC);
-        strategies.add(PasswordValidationStrategy.NO_SEQUENCE);
-        
-        // add new validations following the strategies list...
-        
-        return new ValidationContext(strategies).execute(baseInput);
+        Map<String, String> errMsgMap = new LinkedHashMap<>();
+        for(ValidationStrategy passwordValidation : passwordRules) {
+            if (!passwordValidation.validate(baseInput)) {
+                errMsgMap.put(passwordValidation.getRuleType().name(),
+                              passwordValidation.getDefaultErrorMsg());
+            }
+        }
+        return errMsgMap;
     }
+    
 ```
 
-If user wants to add any rules into the validation process, 
-they could just create new field in Enum PasswordValidationStrategy to setting own validate content & error message.
-Then, if they want to include new input column should be checking. They could just create new enum object which implements 
+If user wants to add any rules into the validation process, They could just create new rule object which implements 
 interface ValidationStrategy to raise entire fresh validation process. 
-
-**e.g.** added Enum EmailValidationStrategy and also added related fields both in ValidationType & ErrorMsgType, 
-so that we could extend validation functionalities based on the structure much easier.
 
 ### Example
 

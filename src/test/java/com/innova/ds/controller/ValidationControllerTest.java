@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.innova.ds.constant.ErrorMsgType;
-import com.innova.ds.constant.ValidationType;
 import com.innova.ds.dto.BaseInput;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,22 +51,6 @@ public class ValidationControllerTest {
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
-        String content = mvcResult.getResponse().getContentAsString();
-        assertEquals(content, mapToJson(mapResultExpected));
-    }
-
-    @Test
-    public void verifyPasswordFail() throws Exception {
-        String inputJson = mapToJson(new BaseInput("1123"));
-        MvcResult mvcResult = getMvcResultWithParam(URI, inputJson);
-
-        Map<String, String> mapResultExpected = new LinkedHashMap<>();
-        mapResultExpected.put(ValidationType.LENGTH_RANGE.name(), ErrorMsgType.LENGTH_RANGE.getDescription());
-        mapResultExpected.put(ValidationType.MIN_LOWERCASE.name(), ErrorMsgType.MIN_LOWERCASE.getDescription());
-        mapResultExpected.put(ValidationType.NO_SEQUENCE.name(), ErrorMsgType.NO_SEQUENCE.getDescription());
-
-        int status = mvcResult.getResponse().getStatus();
-        assertEquals(500, status);
         String content = mvcResult.getResponse().getContentAsString();
         assertEquals(content, mapToJson(mapResultExpected));
     }

@@ -19,9 +19,6 @@ public class ValidationController {
     @PostMapping("/verify/password")
     public ResponseEntity<String> verifyPassword(@RequestBody BaseInput baseDto) {
         Map<String, String> errMsgMap = validationService.verifyPasswordStrategy(baseDto);
-        if (!errMsgMap.isEmpty()) {
-            return new ResponseEntity(errMsgMap, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
         return new ResponseEntity(errMsgMap, HttpStatus.OK);
     }
 }

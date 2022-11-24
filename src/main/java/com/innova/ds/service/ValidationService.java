@@ -1,25 +1,37 @@
 package com.innova.ds.service;
 
 import com.innova.ds.dto.BaseInput;
-import com.innova.ds.validation.*;
-import com.innova.ds.validation.context.ValidationContext;
+import com.innova.ds.rules.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ValidationService {
 
-    public Map<String, String> verifyPasswordStrategy(BaseInput baseInput) {
-        Set<ValidationStrategy> strategies = new LinkedHashSet<>();
-        strategies.add(PasswordValidationStrategy.LOWERCASE_NUMERIC_ONLY);
-        strategies.add(PasswordValidationStrategy.LENGTH_RANGE);
-        strategies.add(PasswordValidationStrategy.MIN_LOWERCASE);
-        strategies.add(PasswordValidationStrategy.MIN_NUMERIC);
-        strategies.add(PasswordValidationStrategy.NO_SEQUENCE);
+    @Autowired
+//    @Qualifier("passwordRules")
+    private List<ValidationStrategy> passwordRules;
 
-        return new ValidationContext(strategies).execute(baseInput);
+    public ValidationService() {
+
     }
+
+    public ValidationService(List<ValidationStrategy> passwordRules) {
+        this.passwordRules = passwordRules;
+    }
+
+    public Map<String, String> verifyPasswordStrategy(BaseInput baseInput) {
+        Map<String, String> errMsgMap = new LinkedHashMap<>();
+        for(ValidationStrategy passwordValidation : passwordRules) {
+            if (!passwordValidation.validate(baseInput)) {
+                errMsgMap.put(passwordValidation.getRuleType().name(),
+                              passwordValidation.getDefaultErrorMsg());
+            }
+        }
+        return errMsgMap;
+    }
+
 }
