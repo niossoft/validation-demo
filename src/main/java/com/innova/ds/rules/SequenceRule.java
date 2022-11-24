@@ -14,7 +14,7 @@ public class SequenceRule implements ValidationStrategy {
 
     @Override
     public <T extends BaseInput> Boolean validate(T input) {
-        return StringUtils.executeRegex("(.+)\\1", input.getPassword()) == 0;
+        return StringUtils.executeRegex(REGEXP_CONSECUTIVE, input.getPassword()) == 0;
     }
 
     @Override
