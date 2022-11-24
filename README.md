@@ -8,7 +8,7 @@ I try to create with the usual **Class way** of implementation.
 
 The structure is presented in the picture below.
 
-![image](./src/main/resources/images/ValidationStructure.png)
+![image](./src/main/resources/images/Validation_Structure.png)
 
 The several Rules object implements interface ValidationStrategy, 
 and each rule will override with 3 methods to do the customized job in the validation process. 
