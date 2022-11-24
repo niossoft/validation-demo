@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Qualifier("sequence_rule")
 public class SequenceRule implements ValidationStrategy {
 
-    public final String REGEXP_CONSECUTIVE = "(.+)\1";
+    public final String REGEXP_CONSECUTIVE = "(.+)\\1";
 
     @Override
     public <T extends BaseInput> Boolean validate(T input) {
