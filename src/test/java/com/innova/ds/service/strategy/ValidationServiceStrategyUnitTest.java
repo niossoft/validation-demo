@@ -6,7 +6,6 @@ import com.innova.ds.rules.LengthRule;
 import com.innova.ds.rules.LowercaseNumericOnlyRule;
 import com.innova.ds.rules.SequenceRule;
 import com.innova.ds.rules.ValidationStrategy;
-import com.innova.ds.service.ValidationService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -21,13 +20,8 @@ public class ValidationServiceStrategyUnitTest {
 
     @ParameterizedTest
     @MethodSource("testParameters")
-    public void testUseCaseCollectionsWithValidationTestConfig(final ValidationRulesTestConfig vtc) {
-        // Step 1: set Rules for Validation
-        ValidationService validationService = new ValidationService(vtc.rules);
-        // Step 2: get Actual Result From ValidationService
-        Map<String, String> map = validationService.verifyPasswordStrategy(vtc.input);
-        // Step 3: assert Result with Expected
-        vtc.assertResult(map, convertRuleTypeToErrMsgMap(vtc.errRuleTypesExpected));
+    public void testUseCaseCollectionsWithValidationTestConfig(final ValidationTestStrategy vtc) {
+        vtc.execute();
     }
 
     public static List<ValidationTestStrategy> testParameters() {
@@ -61,14 +55,6 @@ public class ValidationServiceStrategyUnitTest {
             list.add(validationTestConfig);
         }
         return list;
-    }
-
-    private Map<String, String> convertRuleTypeToErrMsgMap(List<RuleType> ruleTypes) {
-        Map<String, String> errMsgMap = new HashMap<>();
-        for (RuleType ruleType : ruleTypes) {
-            errMsgMap.put(ruleType.name(), ruleType.getDescription());
-        }
-        return errMsgMap;
     }
 
 }
