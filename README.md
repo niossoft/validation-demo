@@ -69,11 +69,9 @@ If Results are empty, **_means it passed all the validation!_**
 #### Failure Results:
 ```
 {
-    "LOWERCASE_NUMERIC_ONLY": "alphabetical lowercase & numeric character only.",
-    "LENGTH_RANGE": "Failed length requirement.",
-    "MIN_LOWERCASE": "must contain at least one alphabetical lowercase character.",
-    "MIN_NUMERIC": "must contain at least one numeric character.",
-    "NO_SEQUENCE": "must not contain any repeating substrings of two characters or more"
+    "LENGTH": "Must be between 5 and 12 characters in length.",
+    "LOWERCASE_NUMERIC_ONLY": "Must consist of a mixture of lowercase letters and numerical digits only, with at least one of each.",
+    "SEQUENCE": "must not contain any repeating substrings of one characters or more."
 }
 ```
 
