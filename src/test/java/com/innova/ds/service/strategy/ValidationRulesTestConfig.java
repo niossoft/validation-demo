@@ -16,6 +16,7 @@ public class ValidationRulesTestConfig implements ValidationTestStrategy {
     BaseInput input;
     List<ValidationStrategy> rules;
     List<RuleType> errRuleTypesExpected;
+    List<String> inputStringList;
 
     public ValidationRulesTestConfig() {
 
@@ -50,6 +51,10 @@ public class ValidationRulesTestConfig implements ValidationTestStrategy {
         this.errRuleTypesExpected = errRuleTypesExpected;
     }
 
+    public void configureTestInputStringList(List<String> inputStringList) {
+        this.inputStringList = inputStringList;
+    }
+
     @Override
     public BaseInput getBaseInput() {
         return input;
@@ -64,6 +69,8 @@ public class ValidationRulesTestConfig implements ValidationTestStrategy {
     public List<RuleType> getErrRuleTypesExpected() {
         return errRuleTypesExpected;
     }
+
+
 
     private Map<String, String> convertRuleTypeToErrMsgMap(List<RuleType> ruleTypes) {
         Map<String, String> errMsgMap = new HashMap<>();

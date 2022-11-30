@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +35,12 @@ public class ValidationServiceUnitTest {
     @Autowired
     private ValidationService validationService;
 
+    public void assertResults(BaseInput input, Map<String, String> mapResultExpected) {
+        // Act
+        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
+        assertEquals(mapResultExpected, mapResultActual);
+    }
+
     @ParameterizedTest
     @ValueSource(strings = { "11@", "aa!", "pm143%#$@dsjjghjkmcndnh", "ehehn424@測試字串rbsvecsvbsdfb" })
     public void testVerifyPasswordWithSequenceAndLengthAndLowercaseNumericOnlyFailure(String password) {
@@ -43,24 +50,20 @@ public class ValidationServiceUnitTest {
         mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
         mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
         mapResultExpected.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
-        // Act
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
         // Assert
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "1@1", "a@a1", "pm143%#$@dsjghjkm", "ehn424@測試字串rbsvecsvbsd" })
-    public void testVerifyPasswordWithSequenceAndLengthFailure(String password) {
+    @ValueSource(strings = { "1@1@ewg", "a@a@svs", "143143%#$@1", "測試字串rbrbcsv" })
+    public void testVerifyPasswordWithLowercaseNumericOnlyAndSequenceFailure(String password) {
         // Arrange
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
-        mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
-        // Act
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
+        mapResultExpected.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
         // Assert
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
@@ -71,24 +74,20 @@ public class ValidationServiceUnitTest {
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
         mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
-        // Act
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
         // Assert
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "11111", "aaaaa", "pm143143dsb@", "ehn4242bvs!" })
-    public void testVerifyPasswordWithLowercaseNumericOnlyAndSequenceFailure(String password) {
+    @ValueSource(strings = { "a111", "1aaa", "pm143143dsbdrfh", "ehn4242bvsgmdsad", "1jkjkvs529gcdbdf16" })
+    public void testVerifyPasswordWithSequenceAndLengthFailure(String password) {
         // Arrange
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
-        mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
+        mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
         mapResultExpected.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
-        // Act
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
         // Assert
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
@@ -98,36 +97,30 @@ public class ValidationServiceUnitTest {
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
-        // Act
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
         // Assert
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "12f4", "ab8d", "g8d6", "62stjqjlswka0", "jkwoxa4zyj8gr", "b8ziwa96u1089" })
+    @ValueSource(strings = { "12f4", "ab8d", "g8d6", "62stjqjlswka0", "jkwoxa4zyj8grsgs", "b8ziwa96u1089fdbfd" })
     public void testVerifyPasswordWithLengthFailure(String password) {
         // Arrange
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
-        // Act
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
         // Assert
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "123456", "abcdef", "#pm143", "ehn42?" })
+    @ValueSource(strings = { "123456", "abcdef", "#pm143", "ehn42?", "123測試字串abc" })
     public void testVerifyPasswordWithLowercaseNumericOnlyFailure(String password) {
         // Arrange
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
-        // Act
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
         // Assert
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
 }

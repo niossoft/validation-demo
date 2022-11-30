@@ -27,6 +27,12 @@ public class ValidationServiceIntegrationTest {
     @Mock
     ValidationService mockValidationService;
 
+    public void assertResults(BaseInput input, Map<String, String> mapResultExpected) {
+        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
+        Mockito.when(mockValidationService.verifyPasswordStrategy(input)).thenReturn(mapResultExpected);
+        assertEquals(mapResultExpected, mapResultActual);
+    }
+
     @ParameterizedTest
     @ValueSource(strings = { "1dsvds", "a816561", "e0wk7o76", "lo06cvxez", "txhvg7qvhx5x", "b3ulp49mgqc6",
                              "dg156sd", "5a2k957lvk", "c9bsz" })
@@ -34,48 +40,86 @@ public class ValidationServiceIntegrationTest {
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
 
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
-        Mockito.when(mockValidationService.verifyPasswordStrategy(input)).thenReturn(mapResultExpected);
-
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "123456", "abcdef" })
+    @ValueSource(strings = { "99@", "zzz!", "pmpm143%#$@dgdgsvdsgfn", "fewvwvhn424#@測試字串rb" })
+    public void testVerifyPasswordWithSequenceAndLengthAndLowercaseNumericOnlyFailure(String password) {
+        // Arrange
+        BaseInput input = new BaseInput(password);
+        Map<String, String> mapResultExpected = new LinkedHashMap<>();
+        mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
+        mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
+        mapResultExpected.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
+        // Assert
+        assertResults(input, mapResultExpected);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "99@ewg", "zdzdv#svs#", "543543%#$@1", "測試字串175rbrb" })
+    public void testVerifyPasswordWithLowercaseNumericOnlyAndSequenceFailure(String password) {
+        // Arrange
+        BaseInput input = new BaseInput(password);
+        Map<String, String> mapResultExpected = new LinkedHashMap<>();
+        mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
+        mapResultExpected.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
+        // Assert
+        assertResults(input, mapResultExpected);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "1@1v", "azf#", "pm14f43%#$@dbfdb", "ehnfhn424@測試字串15bvsd" })
+    public void testVerifyPasswordWithLowercaseNumericOnlyAndLengthFailure(String password) {
+        // Arrange
+        BaseInput input = new BaseInput(password);
+        Map<String, String> mapResultExpected = new LinkedHashMap<>();
+        mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
+        mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
+        // Assert
+        assertResults(input, mapResultExpected);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "a888", "1ghh", "pm11789dsbfd6", "bsvsvs1386gmdsad", "1jvjv5kdsvds516" })
+    public void testVerifyPasswordWithSequenceAndLengthFailure(String password) {
+        // Arrange
+        BaseInput input = new BaseInput(password);
+        Map<String, String> mapResultExpected = new LinkedHashMap<>();
+        mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
+        mapResultExpected.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
+        // Assert
+        assertResults(input, mapResultExpected);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "123456", "abcdef", "0987654321", "zyxwvsrt", "#12345" })
     public void testVerifyPasswordWithLowercaseNumericOnlyFailure(String password) {
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
 
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
-        Mockito.when(mockValidationService.verifyPasswordStrategy(input)).thenReturn(mapResultExpected);
-
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "123456asfyhdfbfdb" })
+    @ValueSource(strings = { "123afg1sdv16sac", "123456asfyhdfbfdb", "12ko", "98k" })
     public void testVerifyPasswordWithLengthLongerFailure(String password) {
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
 
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
-        Mockito.when(mockValidationService.verifyPasswordStrategy(input)).thenReturn(mapResultExpected);
-
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "12a4", "8hg6", "1a5", "a1", "8g" })
+    @ValueSource(strings = { "12a4", "8hg6", "1a5", "r53", "a1", "8g" })
     public void testVerifyPasswordWithLengthShorterFailure(String password) {
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
-        Mockito.when(mockValidationService.verifyPasswordStrategy(input)).thenReturn(mapResultExpected);
 
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
@@ -84,10 +128,8 @@ public class ValidationServiceIntegrationTest {
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
-        Mockito.when(mockValidationService.verifyPasswordStrategy(input)).thenReturn(mapResultExpected);
 
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
@@ -96,10 +138,8 @@ public class ValidationServiceIntegrationTest {
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
-        Mockito.when(mockValidationService.verifyPasswordStrategy(input)).thenReturn(mapResultExpected);
 
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
     @ParameterizedTest
@@ -108,10 +148,8 @@ public class ValidationServiceIntegrationTest {
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
         mapResultExpected.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
-        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
-        Mockito.when(mockValidationService.verifyPasswordStrategy(input)).thenReturn(mapResultExpected);
 
-        assertEquals(mapResultExpected, mapResultActual);
+        assertResults(input, mapResultExpected);
     }
 
 }

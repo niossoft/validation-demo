@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 public class RulesUnitTest {
 
     @ParameterizedTest
-    @ValueSource(strings = { "1dsvds", "a816561" })
+    @ValueSource(strings = { "1dsvds", "a816561", "1sa286", "wav513816", "f135asvf", "12a12z12" })
     public void testVerifyPasswordWithLowercaseNumericOnlySuccessful(String password) {
         BaseInput input = new BaseInput(password);
         LowercaseNumericOnlyRule rule = new LowercaseNumericOnlyRule();
@@ -27,7 +27,7 @@ public class RulesUnitTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "abcde", "12345", "abcdefghijkl", "123456789012" })
+    @ValueSource(strings = { "abcde", "12345", "abcdefghijkl", "123456789012", "15316161163" })
     public void testVerifyPasswordWithLengthBoundarySuccessful(String password) {
         BaseInput input = new BaseInput(password);
         LengthRule rule = new LengthRule();
