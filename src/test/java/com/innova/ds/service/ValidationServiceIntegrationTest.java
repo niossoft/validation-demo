@@ -103,7 +103,7 @@ public class ValidationServiceIntegrationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "123afg1sdv16sac", "123456asfyhdfbfdb", "12ko", "98k" })
+    @ValueSource(strings = { "123afg1sdv16sac", "123456asfyhdfbfdb", "grgnhkmuy12ko", "98k1536vdsgvds" })
     public void testVerifyPasswordWithLengthLongerFailure(String password) {
         BaseInput input = new BaseInput(password);
         Map<String, String> mapResultExpected = new LinkedHashMap<>();
