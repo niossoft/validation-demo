@@ -42,8 +42,8 @@ public class LowercaseNumericOnlyRule implements ValidationStrategy {
     }
 
     @Override
-    public RuleType getRuleType() {
-        return RuleType.LOWERCASE_NUMERIC_ONLY;
+    public String getRuleType() {
+        return RuleType.LOWERCASE_NUMERIC_ONLY.name();
     }
 
 }

@@ -23,8 +23,8 @@ public class SequenceRule implements ValidationStrategy {
     }
 
     @Override
-    public RuleType getRuleType() {
-        return RuleType.SEQUENCE;
+    public String getRuleType() {
+        return RuleType.SEQUENCE.name();
     }
 
     public String getREGEXP_CONSECUTIVE() {

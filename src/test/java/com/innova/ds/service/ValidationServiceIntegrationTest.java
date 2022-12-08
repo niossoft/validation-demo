@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class ValidationServiceIntegrationTest {
                              "dg156sd", "5a2k957lvk", "c9bsz" })
     public void testVerifyPasswordWithSuccessful(String password) {
         BaseInput input = new BaseInput(password);
-        Map<String, String> mapResultExpected = new LinkedHashMap<>();
+        Map<String, String> mapResultExpected = new HashMap<>();
 
         assertResults(input, mapResultExpected);
     }

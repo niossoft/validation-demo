@@ -24,10 +24,10 @@ public class ValidationService {
     }
 
     public Map<String, String> verifyPasswordStrategy(BaseInput baseInput) {
-        Map<String, String> errMsgMap = new LinkedHashMap<>();
+        Map<String, String> errMsgMap = new HashMap<>();
         for(ValidationStrategy passwordValidation : passwordRules) {
             if (!passwordValidation.validate(baseInput)) {
-                errMsgMap.put(passwordValidation.getRuleType().name(),
+                errMsgMap.put(passwordValidation.getRuleType(),
                               passwordValidation.getDefaultErrorMsg());
             }
         }

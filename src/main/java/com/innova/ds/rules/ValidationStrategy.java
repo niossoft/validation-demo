@@ -7,6 +7,6 @@ public interface ValidationStrategy {
 
     <T extends BaseInput> Boolean validate(T input);
     String getDefaultErrorMsg();
-    RuleType getRuleType();
+    String getRuleType();
 
 }

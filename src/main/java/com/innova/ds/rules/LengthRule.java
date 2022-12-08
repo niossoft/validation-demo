@@ -25,8 +25,8 @@ public class LengthRule implements ValidationStrategy {
     }
 
     @Override
-    public RuleType getRuleType() {
-        return RuleType.LENGTH;
+    public String getRuleType() {
+        return RuleType.LENGTH.name();
     }
 
 }
