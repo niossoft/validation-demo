@@ -14,4 +14,9 @@ public abstract class StringUtils {
         }
         return matches;
     }
+
+    public static Boolean isNotBlank(String str) {
+        return str != null && !str.trim().isEmpty();
+    }
+
 }

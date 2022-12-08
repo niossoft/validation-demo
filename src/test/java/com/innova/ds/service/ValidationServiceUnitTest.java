@@ -27,9 +27,6 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-// @SpringBootTest
-//@RunWith(MockitoJUnitRunner.class)
-//@ExtendWith(MockitoExtension.class)
 @RunWith(MockitoJUnitRunner.class)
 public class ValidationServiceUnitTest {
 
@@ -39,12 +36,10 @@ public class ValidationServiceUnitTest {
     ValidationStrategy lengthRule;
     @Mock
     ValidationStrategy sequenceRule;
-
-    List<ValidationStrategy> passwordRules;
     @InjectMocks
     ValidationService validationService;
-    @Spy
-    Map<String, String> mapResults;
+
+    List<ValidationStrategy> passwordRules;
 
     @Before
     public void setUp() {
@@ -52,41 +47,65 @@ public class ValidationServiceUnitTest {
         validationService = new ValidationService(passwordRules);
     }
 
-    @Test
-//    @ParameterizedTest
-//    @ValueSource(strings = { "11@", "aa!", "pm143%#$@dsjjghjkmcndnh", "ehehn424@測試字串rbsvecsvbsdfb" })
-    public void test() {
+    public void assertResults(BaseInput input, Map<String, String> mapResultExpected) {
 
-//        validationService = new ValidationService(passwordRules);
-//        Mockito.when(lowercaseNumericOnlyRule.getRuleType())
-        Mockito.when(lowercaseNumericOnlyRule.getRuleType()).thenReturn(RuleType.LOWERCASE_NUMERIC_ONLY.name());
-        Mockito.when(lowercaseNumericOnlyRule.getDefaultErrorMsg()).thenReturn(RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
-
-        BaseInput input = new BaseInput();
-        Map<String, String> mapResultExpected = new HashMap<>();
-
-
-        mapResults.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
-//        mapResults.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
-//        mapResults.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
-
+        setReturnObjectByRuleType(mapResultExpected);
+        // Act
         Map<String, String> mapResultMock = validationService.verifyPasswordStrategy(input);
-
-
-        System.out.println(mapResultMock);
-
-//        Mockito.doReturn(mapResultExpected).when(validationService.verifyPasswordStrategy(input)).get(RuleType.LOWERCASE_NUMERIC_ONLY.name());
-
-//        assertResults(input, mapResultExpected);
-
-//        Map<String, String> mapResult = validationService.verifyPasswordStrategy(input);
+        assertEquals(mapResultExpected, mapResultMock);
     }
 
-//    public void assertResults(BaseInput input, Map<String, String> mapResultExpected) {
-//        // Act
-//        Map<String, String> mapResultActual = validationService.verifyPasswordStrategy(input);
-//        assertEquals(mapResultExpected, mapResultActual);
-//    }
+    public void setReturnObjectByRuleType(Map<String, String> mapResultExpected) {
+        for (String ruleType: mapResultExpected.keySet()) {
+            switch (ruleType) {
+                case "LOWERCASE_NUMERIC_ONLY":
+                    Mockito.when(lowercaseNumericOnlyRule.getRuleType()).thenReturn(RuleType.LOWERCASE_NUMERIC_ONLY.name());
+                    Mockito.when(lowercaseNumericOnlyRule.getDefaultErrorMsg()).thenReturn(RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
+                    break;
+                case "LENGTH":
+                    Mockito.when(lengthRule.getRuleType()).thenReturn(RuleType.LENGTH.name());
+                    Mockito.when(lengthRule.getDefaultErrorMsg()).thenReturn(RuleType.LENGTH.getDescription());
+                    break;
+                case "SEQUENCE":
+                    Mockito.when(sequenceRule.getRuleType()).thenReturn(RuleType.SEQUENCE.name());
+                    Mockito.when(sequenceRule.getDefaultErrorMsg()).thenReturn(RuleType.SEQUENCE.getDescription());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    @Test
+    public void testVerifyPasswordAllSuccessful() {
+        BaseInput input = new BaseInput("1adsv1");
+        Map<String, String> mapResultExpected = new HashMap<>();
+
+        assertResults(input, mapResultExpected);
+    }
+
+    @Test
+    public void testVerifyPasswordWithSequenceAndLengthAndLowercaseNumericOnlyFailure() {
+        BaseInput input = new BaseInput("11111");
+        Map<String, String> mapResultExpected = new HashMap<>();
+        mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
+        mapResultExpected.put(RuleType.LENGTH.name(), RuleType.LENGTH.getDescription());
+        mapResultExpected.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
+
+        assertResults(input, mapResultExpected);
+    }
+
+    @Test
+    public void testVerifyPasswordWithLowercaseNumericOnlyAndSequenceFailure() {
+        // Arrange
+        BaseInput input = new BaseInput();
+        Map<String, String> mapResultExpected = new HashMap<>();
+        mapResultExpected.put(RuleType.LOWERCASE_NUMERIC_ONLY.name(), RuleType.LOWERCASE_NUMERIC_ONLY.getDescription());
+        mapResultExpected.put(RuleType.SEQUENCE.name(), RuleType.SEQUENCE.getDescription());
+        // Assert
+        assertResults(input, mapResultExpected);
+    }
+
 //
 //    @ParameterizedTest
 //    @ValueSource(strings = { "11@", "aa!", "pm143%#$@dsjjghjkmcndnh", "ehehn424@測試字串rbsvecsvbsdfb" })

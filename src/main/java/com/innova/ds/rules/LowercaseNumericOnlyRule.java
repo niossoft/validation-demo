@@ -5,8 +5,6 @@ import com.innova.ds.dto.BaseInput;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 @Component
 @Qualifier("lowercase_numeric_only_rule")
 public class LowercaseNumericOnlyRule implements ValidationStrategy {
@@ -16,24 +14,24 @@ public class LowercaseNumericOnlyRule implements ValidationStrategy {
 
     @Override
     public <T extends BaseInput> Boolean validate(T input) {
-        AtomicInteger numericCnt = new AtomicInteger();
-        AtomicInteger lowerCnt = new AtomicInteger();
-        AtomicInteger cnt = new AtomicInteger();
+        int numericCnt = 0;
+        int lowerCnt = 0;
+        int cnt = 0;
 
         for(char node : input.getPassword().toCharArray()) {
             if(!Character.isDigit(node) && !Character.isLowerCase(node)) {
-                cnt.getAndIncrement();
+                cnt ++;
             }
             if(Character.isLowerCase(node)) {
-                lowerCnt.getAndIncrement();
+                lowerCnt ++;
             }
             if(Character.isDigit(node)) {
-                numericCnt.getAndIncrement();
+                numericCnt ++;
             }
         }
-        return lowerCnt.intValue() >= MIN_LOWERCASE_NUM
-                && numericCnt.intValue() >= MIN_NUMERIC_NUM
-                && cnt.intValue() == 0;
+        return lowerCnt >= MIN_LOWERCASE_NUM
+                && numericCnt >= MIN_NUMERIC_NUM
+                && cnt == 0;
     }
 
     @Override

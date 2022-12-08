@@ -2,6 +2,7 @@ package com.innova.ds.service;
 
 import com.innova.ds.dto.BaseInput;
 import com.innova.ds.rules.*;
+import com.innova.ds.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,9 @@ public class ValidationService {
     public Map<String, String> verifyPasswordStrategy(BaseInput baseInput) {
         Map<String, String> errMsgMap = new HashMap<>();
         for(ValidationStrategy passwordValidation : passwordRules) {
-            if (!passwordValidation.validate(baseInput)) {
+            if (!passwordValidation.validate(baseInput)
+                    && StringUtils.isNotBlank(passwordValidation.getRuleType())) {
+
                 errMsgMap.put(passwordValidation.getRuleType(),
                               passwordValidation.getDefaultErrorMsg());
             }
