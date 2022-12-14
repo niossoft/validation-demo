@@ -24,7 +24,7 @@ public class ValidationServiceUnitTest {
     ValidationStrategy lengthRule;
     @Mock
     ValidationStrategy sequenceRule;
-    @InjectMocks
+    @Mock
     ValidationService validationService;
 
     List<ValidationStrategy> passwordRules;
